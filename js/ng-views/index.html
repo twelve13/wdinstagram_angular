@@ -1,0 +1,4 @@
+<h2>I'm the Wdinstagram Index</h2>
+<div ng-repeat="instagram in vm.instagrams">
+	<p><a ui-sref="wdinstagramShow({id: $index})">{{instagram.body}}</a></p>
+</div>
