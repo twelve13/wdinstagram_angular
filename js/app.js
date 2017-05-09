@@ -3,9 +3,10 @@
 (function(){
 
 angular
-  	.module("wdinstagram", ["ui.router"])
+  	.module("wdinstagram", ["ui.router", "ngResource"])
   	.config(["$stateProvider", Router])
     .factory("WdinstagramFactory", [
+        "$resource",
         WdinstagramFactoryFunction
       ])
   	.controller("WdinstagramIndexController", [
@@ -36,8 +37,8 @@ angular
 
   function WdinstagramIndexControllerFunction(WdinstagramFactory){
   	console.log("I'm in the controller!!!");
-    WdinstagramFactory.helloWorld();
-  	this.instagrams = instagrams;
+ 
+  	this.instagrams = WdinstagramFactory.query();
   }
 
   function WdinstagramShowControllerFunction($stateParams){
@@ -45,12 +46,8 @@ angular
   	this.instagram = instagrams[$stateParams.id];
   }
 
-  function WdinstagramFactoryFunction(){
-    return {
-      helloWorld: function(){
-        console.log("Hello world");
-      }
-    }
+  function WdinstagramFactoryFunction($resource){
+    return $resource( "http://localhost:3000/entries/:id")
   }
 
 
