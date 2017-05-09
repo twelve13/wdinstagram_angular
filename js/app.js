@@ -22,6 +22,11 @@ angular
       "WdinstagramFactory",
       WdinstagramNewControllerFunction
       ])
+    .controller("WdinstagramEditController", [
+      "WdinstagramFactory",
+      "$stateParams",
+      WdinstagramEditControllerFunction
+      ]);
 
   function Router($stateProvider){
   	console.log("function Router is working")
@@ -43,7 +48,13 @@ angular
       controller: "WdinstagramShowController",
       controllerAs: "vm",
       templateUrl: "js/ng-views/show.html"
-    });
+    })
+    .state("wdinstagramEdit", {
+      url: "/instagrams/:id/edit",
+      controller: "WdinstagramEditController",
+      controllerAs: "vm",
+      templateUrl: "js/ng-views/edit.html"
+    })
   }
 
   function WdinstagramIndexControllerFunction(WdinstagramFactory){
@@ -53,12 +64,13 @@ angular
   }
 
   function WdinstagramShowControllerFunction(WdinstagramFactory, $stateParams){
-  	console.log($stateParams);
   	this.instagram = WdinstagramFactory.get({id: $stateParams.id});
   }
 
   function WdinstagramFactoryFunction($resource){
-    return $resource( "http://localhost:3000/entries/:id")
+    return $resource( "http://localhost:3000/entries/:id", {}, {
+      update: {method: "PUT"}
+    })
   }
 
   function WdinstagramNewControllerFunction(WdinstagramFactory){
@@ -68,6 +80,15 @@ angular
     }
   }
 
+  function WdinstagramEditControllerFunction(WdinstagramFactory, $stateParams){
+    this.instagram = WdinstagramFactory.get({id: $stateParams.id});
+    this.update = function(){
+      this.instagram.$update({id: $stateParams.id})
+    }
+    this.destroy = function(){
+      this.instagram.$delete({id: $stateParams.id})
+    }
+  }
 
 
 })();
