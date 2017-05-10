@@ -25,6 +25,7 @@ angular
     .controller("WdinstagramEditController", [
       "WdinstagramFactory",
       "$stateParams",
+      "$state",
       WdinstagramEditControllerFunction
       ]);
 
@@ -76,14 +77,18 @@ angular
   function WdinstagramNewControllerFunction(WdinstagramFactory){
     this.instagram = new WdinstagramFactory();
     this.create = function(){
-      this.instagram.$save()
+      this.instagram.$save( function(instagram) {
+        $state.go("wdinstagramShow", {id: instagram.id})
+      })
     }
   }
 
-  function WdinstagramEditControllerFunction(WdinstagramFactory, $stateParams){
+  function WdinstagramEditControllerFunction(WdinstagramFactory, $stateParams, $state){
     this.instagram = WdinstagramFactory.get({id: $stateParams.id});
     this.update = function(){
-      this.instagram.$update({id: $stateParams.id})
+      this.instagram.$update({id: $stateParams.id}, function(instagram) {
+        $state.go("wdinstagramShow", {id: instagram.id})
+      })
     }
     this.destroy = function(){
       this.instagram.$delete({id: $stateParams.id})
